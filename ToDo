@@ -3,7 +3,7 @@ Berg:
 - purkinje_library
 	- Finish the grow_segment() function
 	- Finish the depth_first_search() function
-	- 
+	- Remember to pass the size of the discretization to the set_custom_purkinje_network() ("purkinje.c")
 
 - models_library
 	- Fix bug on the Li & Rudy 2011 Purkinje cell model
