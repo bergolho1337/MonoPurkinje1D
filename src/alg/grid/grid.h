@@ -6,6 +6,7 @@
 #define MONOALG3D_GRID_H
 
 #include "../cell/cell.h"
+#include "../../graph/graph.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,6 +29,7 @@ struct grid {
     struct cell_node* *active_cells;
     bool adaptive;
 
+    struct graph *the_purkinje_network;
 };
 
 
@@ -66,7 +68,6 @@ void save_grid_domain (struct grid * the_grid, const char *file_name);
 void lock_grid(struct grid *the_grid);
 
 void unlock_grid(struct grid *the_grid);
-
 
 
 #endif //MONOALG3D_GRID_H

@@ -1,3 +1,20 @@
-- Make a domain version that sets the two scars and the fibrosis from file
+Berg:
+
+- purkinje_library
+	- Finish the grow_segment() function
+	- Finish the depth_first_search() function
+	- 
+
+- models_library
+	- Fix bug on the Li & Rudy 2011 Purkinje cell model
+	- Build more celular model related to Purkinje cell (DiFrancesco Noble, ...)
+	- Test each variation of the TenTusscher model (Miocardium, Epicardium and Endocardium) using the 2006 version.
+	- Refactor the code of the 'mask_function' module
+	- Made more tests with the adaptive mesh when dealing with more than one celular model
+
+========================================================================================================================================
+Sachetto:
+
+- Correct the domain version that sets the two scars and the fibrosis from file (maybe the error is on extra-data
 - Compare the mesh with the mesh from the scientific reports paper
 - Use a sparse matrix format and take the matrix out of the alg mesh (http://people.sc.fsu.edu/~jburkardt/c_src/csparse/csparse.html)

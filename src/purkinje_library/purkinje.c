@@ -23,7 +23,8 @@ SET_SPATIAL_PURKINJE (initialize_purkinje_with_custom_mesh)
     char *network_file;
     GET_PARAMETER_VALUE_CHAR_OR_REPORT_ERROR (network_file,config->config_data.config,"network_file");
 
-    print_to_stdout_and_file("Loading Purkinje Network: %s\n",config->domain_name);
+    print_to_stdout_and_file("Loading a custom Purkinje Network: %s\n",config->domain_name);
+    print_to_stdout_and_file("Using the Purkinje library function: \"initialize_purkinje_with_custom_mesh\"\n");
     set_custom_purkinje_network(the_grid, network_file);
 
     free (network_file);

@@ -7,7 +7,23 @@
 
 #include "../alg/grid/grid.h"
 
+struct point
+{
+    double x, y, z;
+};
+
+struct branch
+{
+    uint32_t source;
+    uint32_t destination;
+};
+
 void set_custom_purkinje_network (struct grid *the_grid, const char *file_name);
+void set_purkinje_network_from_file (struct graph *the_purkinje_network, const char *file_name);
+void build_skeleton_purkinje (const char *filename, struct graph *skeleton_network);
+void build_mesh_purkinje (struct graph *the_purkinje_network, struct graph *skeleton_network);
+void depth_first_search (struct graph *the_purkinje_network, struct node *n, int level);
+void read_purkinje_network_from_file (const char *filename, struct point **points, struct branch **branches, int *N, int *E);
 
 // TO DO: Other types of network will be implemented here ...
 

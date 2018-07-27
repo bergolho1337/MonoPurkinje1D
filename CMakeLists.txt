@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.1)
-project(MonoAlg3D)
+project(MonoAlg1D)
 
 IF(MSVC)
 	set(GLUT_INCLUDE_DIR "C:/Users/sache/freeglut/include")
@@ -91,16 +91,17 @@ ADD_SUBDIRECTORY(src/monodomain)
 ADD_SUBDIRECTORY(src/hash)
 ADD_SUBDIRECTORY(src/ini_parser)
 ADD_SUBDIRECTORY(src/string)
+ADD_SUBDIRECTORY(src/graph)
 
-ADD_EXECUTABLE(MonoAlg3D src/main.c)
+ADD_EXECUTABLE(MonoAlg1D src/main.c)
 
-ADD_DEPENDENCIES(MonoAlg3D utils alg solvers hashes ini_parser string ${OPT_DEPS})
+ADD_DEPENDENCIES(MonoAlg1D utils alg solvers hashes ini_parser string graph ${OPT_DEPS})
 
 IF(MSVC)
-    TARGET_LINK_LIBRARIES(MonoAlg3D alg solvers utils hashes ini_parser string ${OPT_DEPS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CUDA_LIBRARIES} dl)
+    TARGET_LINK_LIBRARIES(MonoAlg1D alg solvers utils hashes ini_parser string graph ${OPT_DEPS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CUDA_LIBRARIES} dl)
     SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shared_libs )
 ELSE()
-    TARGET_LINK_LIBRARIES(MonoAlg3D alg solvers utils hashes ini_parser string ${OPT_DEPS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CUDA_LIBRARIES} dl m)
+    TARGET_LINK_LIBRARIES(MonoAlg1D alg solvers utils hashes ini_parser string graph ${OPT_DEPS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${CUDA_LIBRARIES} dl m)
 ENDIF()
 
 

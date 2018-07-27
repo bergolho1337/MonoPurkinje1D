@@ -17,6 +17,8 @@ struct grid* new_grid() {
     sb_reserve(result->refined_this_step, 128);
     sb_reserve(result->free_sv_positions, 128);
 
+    // Purkinje
+    result->the_purkinje_network = new_graph();
 
     return result;
 }
@@ -319,7 +321,9 @@ void clean_grid (struct grid *the_grid) {
         }
     }
 
-
+    if (the_grid->the_purkinje_network) {
+        free_graph(the_grid->the_purkinje_network);
+    }
 
     if (the_grid->refined_this_step) {
         sb_clear(the_grid->refined_this_step);
