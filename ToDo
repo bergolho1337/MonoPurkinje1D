@@ -1,8 +1,8 @@
 Berg:
 
 - purkinje_library
-	- Finish the grow_segment() function
-	- Finish the depth_first_search() function
+	- Build the desconstructor for the graph data structure
+	- Populate the 'grid_cell' linked-list with the nodes from the mesh Purkinje graph
 	- Remember to pass the size of the discretization to the set_custom_purkinje_network() ("purkinje.c")
 
 - models_library
@@ -11,6 +11,14 @@ Berg:
 	- Test each variation of the TenTusscher model (Miocardium, Epicardium and Endocardium) using the 2006 version.
 	- Refactor the code of the 'mask_function' module
 	- Made more tests with the adaptive mesh when dealing with more than one celular model
+
+- vtk_output
+	- Write the solution of the Purkinje in files just like Sachetto
+	- Also just after building the Purkinje mesh write this to a VTK file
+	- Build a PurkinjeToVTK project that converts the solutions to a VTU format.
+		- Read the Purkinje mesh stored in VTK format
+		- Read the solution files outputting the value of the nodes  
+		- Use the ideas from ConvertVTK project of Sachetto to help ...
 
 ========================================================================================================================================
 Sachetto:
