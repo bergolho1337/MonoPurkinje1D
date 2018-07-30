@@ -11,13 +11,49 @@ struct graph* new_graph ()
     return result;
 }
 
-// TO DO: need to test outside this program
+void free_list_edges (struct node *n)
+{
+    struct edge *e1 = n->list_edges;
+    struct edge *e2 = n->list_edges->next;
+
+    while (e1 != NULL)
+    {
+        e1->next = NULL;
+        free(e1);
+        e1 = e2;
+        if (e2 != NULL)
+            e2 = e2->next;
+    }
+
+    n->list_edges = NULL;
+}
+
+void free_list_nodes (struct graph *g)
+{
+    struct node *n1 = g->list_nodes;
+    struct node *n2 = g->list_nodes->next;
+
+    while (n1 != NULL)
+    {
+        if (n1->list_edges)
+            free_list_edges(n1);
+        
+        n1->next = NULL;
+        free(n1);
+        n1 = n2;
+        if (n2 != NULL)
+            n2 = n2->next;
+    }
+}
+
 void free_graph (struct graph *g)
 {
-    //if (g->list_nodes)
-    //    free_list_nodes(g);
+    assert(g);
+
+    if (g->list_nodes)
+        free_list_nodes(g);
     
-    //free(g);
+    free(g);
 }
 
 void insert_edge_graph (struct graph *g, const uint32_t id_1, const uint32_t id_2)

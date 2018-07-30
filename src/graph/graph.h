@@ -51,6 +51,8 @@ struct node* search_node (struct graph *g, const uint32_t id);
 
 void print_graph (struct graph *g);
 void free_graph (struct graph *g);
+void free_list_nodes (struct graph *g);
+void free_list_edges (struct node *n);
 
 double calc_norm (const double x1, const double y1, const double z1,\
                   const double x2, const double y2, const double z2);

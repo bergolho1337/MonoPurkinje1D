@@ -1,7 +1,6 @@
 Berg:
 
 - purkinje_library
-	- Build the desconstructor for the graph data structure
 	- Populate the 'grid_cell' linked-list with the nodes from the mesh Purkinje graph
 	- Remember to pass the size of the discretization to the set_custom_purkinje_network() ("purkinje.c")
 

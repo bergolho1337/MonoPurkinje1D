@@ -27,11 +27,6 @@ void set_custom_purkinje_network (struct grid *the_grid, const char *file_name)
     struct graph *purkinje = the_grid->the_purkinje_network;
 
     set_purkinje_network_from_file(purkinje,file_name);
-    
-    // TO DO: Populate the 'grid_cell' linked-list with the nodes from the graph
-    //        Some parameters from the 'cell_node' structure will not be used
-
-    // deallocate memory
 
 }
 
@@ -48,8 +43,8 @@ void set_purkinje_network_from_file (struct graph *the_purkinje_network, const c
     write_purkinje_network_to_vtk(the_purkinje_network);
     //print_graph(the_purkinje_network);
 
-    // TO DO: Implement this function
-    //free_graph(skeleton_network);
+    // Deallocate memory for the Skeleton mesh
+    free_graph(skeleton_network);
     
 }
 
