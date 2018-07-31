@@ -39,6 +39,8 @@ struct graph
     struct node *last_node;
     uint32_t total_nodes;
     uint32_t total_edges;
+
+    double dx;
 };
 
 struct node* new_node (uint32_t id, const double pos[]);

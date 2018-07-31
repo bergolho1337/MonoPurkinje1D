@@ -12,14 +12,6 @@
 #include "../monodomain/config/stim_config.h"
 #include "../libraries_common/config_helpers.h"
 
-SET_SPATIAL_STIM (stim_if_id_less_than) 
-{
-
-    // TO DO: Implement this method
-    // Transverse the Purkinje graph and stimulate only the cells that have an
-    // id below the id_limit
-}
-
 SET_SPATIAL_STIM(set_benchmark_spatial_stim) {
 
     uint32_t n_active = the_grid->num_active_cells;
@@ -192,6 +184,8 @@ SET_SPATIAL_STIM(stim_if_x_greater_equal_than) {
     }
 }
 
+
+
 SET_SPATIAL_STIM(stim_base_mouse) {
 
     uint32_t n_active = the_grid->num_active_cells;
@@ -311,6 +305,90 @@ SET_SPATIAL_STIM(stim_x_y_z_limits) {
         if (stim) {
             stim_value = stim_current;
         } else {
+            stim_value = 0.0;
+        }
+
+        config->spatial_stim_currents[i] = stim_value;
+
+    }
+}
+
+// Berg's stimulus
+SET_SPATIAL_STIM(stim_if_inside_circle_than) {
+
+    uint32_t n_active = the_grid->num_active_cells;
+    struct cell_node **ac = the_grid->active_cells;
+
+    bool stim;
+    real stim_current = config->stim_current;
+    real stim_value;
+
+    double center_x = 0.0;
+    double center_y = 0.0;
+    double center_z = 0.0;
+    double radius = 0.0;
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(double, center_x, config->config_data.config, "center_x");
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(double, center_y, config->config_data.config, "center_y");
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(double, center_z, config->config_data.config, "center_z");
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(double, radius, config->config_data.config, "radius");
+
+    if(config->spatial_stim_currents) {
+        free(config->spatial_stim_currents);
+    }
+
+    config->spatial_stim_currents = (real *)malloc(n_active*sizeof(real));
+
+	int i;
+
+    #pragma omp parallel for private(stim, stim_value)
+    for (i = 0; i < n_active; i++) 
+    {
+        double dist = sqrt(pow(ac[i]->center_x-center_x,2)+pow(ac[i]->center_y-center_y,2)+pow(ac[i]->center_z-center_z,2));
+        stim = dist <= radius;
+
+        if (stim) {
+            stim_value = stim_current;
+        } else {
+            stim_value = 0.0;
+        }
+
+        config->spatial_stim_currents[i] = stim_value;
+
+    }
+}
+
+SET_SPATIAL_STIM(stim_if_id_less_than) {
+
+    uint32_t n_active = the_grid->num_active_cells;
+    //struct cell_node **ac = the_grid->active_cells;
+
+    bool stim;
+    real stim_current = config->stim_current;
+    real stim_value;
+
+    int id;
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(int, id, config->config_data.config, "id_limit");
+
+    if(config->spatial_stim_currents) 
+    {
+        free(config->spatial_stim_currents);
+    }
+
+    config->spatial_stim_currents = (real *)malloc(n_active*sizeof(real));
+
+	int i;
+
+    #pragma omp parallel for private(stim, stim_value)
+    for (i = 0; i < n_active; i++) 
+    {
+        stim = i <= id;
+
+        if (stim) 
+        {
+            stim_value = stim_current;
+        } 
+        else 
+        {
             stim_value = 0.0;
         }
 

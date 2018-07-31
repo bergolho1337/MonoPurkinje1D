@@ -98,6 +98,7 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     }
 
     // Configure the functions and set the mesh domain
+    /*
     if (domain_config) 
     {
         init_domain_functions (domain_config);
@@ -108,19 +109,18 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
         print_to_stdout_and_file ("No domain configuration provided! Exiting!\n");
         exit (EXIT_FAILURE);
     }
+    */
 
     if (purkinje_config) 
     {
         init_purkinje_functions(purkinje_config);
         purkinje_config->set_spatial_purkinje(purkinje_config,the_grid);
-    }
-    /* 
+    } 
     else 
     {
         print_to_stdout_and_file ("No Purkinje configuration provided! Exiting!\n");
         exit (EXIT_FAILURE);
     }
-    */
 
     // OK ATE AQUI
 
@@ -143,6 +143,9 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
         print_to_stdout_and_file ("No linear solver configuration provided! Exiting!\n");
         exit (EXIT_FAILURE);
     }
+
+    //print_to_stdout_and_file("Leaving program ...\n");
+    //exit(EXIT_FAILURE);
 
     if (has_extra_data) 
     {

@@ -1,8 +1,9 @@
 Berg:
 
 - purkinje_library
-	- Populate the 'grid_cell' linked-list with the nodes from the mesh Purkinje graph
-	- Remember to pass the size of the discretization to the set_custom_purkinje_network() ("purkinje.c")
+	- Implement the construct_grid_purkinje() function
+		- Populate the 'grid_cell' linked-list with the nodes from the mesh Purkinje graph
+	- Build the fill_discretization_matrix() for the Purkinje Network
 
 - models_library
 	- Fix bug on the Li & Rudy 2011 Purkinje cell model
@@ -20,7 +21,7 @@ Berg:
 		- Use the ideas from ConvertVTK project of Sachetto to help ...
 
 - extras
-	- Ask Sachetto for the "big_scar", "small_scar" and "human" meshes files.
+	- Ask Sachetto for the "big_scar", "small_scar" and "human" ALG meshes files.
 
 ========================================================================================================================================
 Sachetto:
@@ -28,3 +29,4 @@ Sachetto:
 - Correct the domain version that sets the two scars and the fibrosis from file (maybe the error is on extra-data
 - Compare the mesh with the mesh from the scientific reports paper
 - Use a sparse matrix format and take the matrix out of the alg mesh (http://people.sc.fsu.edu/~jburkardt/c_src/csparse/csparse.html)
+- Finish GUI interface

@@ -256,3 +256,47 @@ ASSEMBLY_MATRIX(no_fibers_assembly_matrix)
             fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->back, 'b');
         }
 }
+
+// TO DO: Implement this function
+ASSEMBLY_MATRIX(purkinje_fibers_assembly_matrix) 
+{
+
+    uint32_t num_active_cells = the_grid->num_active_cells;
+    struct cell_node **ac = the_grid->active_cells;
+
+    initialize_diagonal_elements (the_solver, the_grid);
+
+    int i;
+
+    real sigma_x = 0.0;
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_x, config->config_data.config, "sigma_x");
+
+    real sigma_y = 0.0;
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_y, config->config_data.config, "sigma_y");
+
+    real sigma_z = 0.0;
+    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_z, config->config_data.config, "sigma_z");
+
+    #pragma omp parallel for
+        for (i = 0; i < num_active_cells; i++) 
+        {
+
+            // Computes and designates the flux due to south cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->south, 's');
+
+            // Computes and designates the flux due to north cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->north, 'n');
+
+            // Computes and designates the flux due to east cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->east, 'e');
+
+            // Computes and designates the flux due to west cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->west, 'w');
+
+            // Computes and designates the flux due to front cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->front, 'f');
+
+            // Computes and designates the flux due to back cells.
+            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->back, 'b');
+        }
+}

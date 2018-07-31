@@ -19,25 +19,25 @@
 
 // TO DO: Implement this function
 // Set a a custom Purkinje network from a file that stores its graph structure
-void set_custom_purkinje_network (struct grid *the_grid, const char *file_name) 
+void set_custom_purkinje_network (struct grid *the_grid, const char *file_name, const double side_length) 
 {
 
     struct cell_node *grid_cell = the_grid->first_cell;
 
     struct graph *purkinje = the_grid->the_purkinje_network;
 
-    set_purkinje_network_from_file(purkinje,file_name);
+    set_purkinje_network_from_file(purkinje,file_name,side_length);
 
 }
 
-void set_purkinje_network_from_file (struct graph *the_purkinje_network, const char *file_name) 
+void set_purkinje_network_from_file (struct graph *the_purkinje_network, const char *file_name, const double side_length) 
 {
     struct graph *skeleton_network = new_graph();
 
     //read_purkinje_network_from_file(file_name,&points,&branches,&N,&E);
     build_skeleton_purkinje(file_name,skeleton_network);
     
-    build_mesh_purkinje(the_purkinje_network,skeleton_network);
+    build_mesh_purkinje(the_purkinje_network,skeleton_network,side_length);
     
     // Write the Purkinje to a VTK file for visualization purposes.
     write_purkinje_network_to_vtk(the_purkinje_network);
@@ -112,10 +112,14 @@ void build_skeleton_purkinje (const char *filename, struct graph *skeleton_netwo
     fclose(file);
 }
 
-void build_mesh_purkinje (struct graph *the_purkinje_network, struct graph *skeleton_network)
+void build_mesh_purkinje (struct graph *the_purkinje_network, struct graph *skeleton_network, const double side_length)
 {
     assert(the_purkinje_network);
     assert(skeleton_network);
+
+    // TO DO: Maybe avoid this conversion by building a skeleton mesh directly in micrometers
+    // The side_length of a Purkinje volume is given in micrometers, so we convert to centimeters
+    the_purkinje_network->dx = side_length*1.0e-04;
 
     uint32_t n = skeleton_network->total_nodes;
     // This map is needed to deal with bifurcations
@@ -148,8 +152,7 @@ void depth_first_search (struct graph *the_purkinje_network, struct node *u, int
 
 void grow_segment (struct graph *the_purkinje_network, struct node *u, struct edge *v, uint32_t *map_skeleton_to_mesh)
 {
-    // TO DO: Pass the 'h' parameter as a argument to the function
-    const double h = 0.01;
+    double h = the_purkinje_network->dx;
     double d_ori[3], d[3];
     double segment_length = v->w;
     uint32_t n_points = segment_length / h;
