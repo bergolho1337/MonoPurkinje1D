@@ -3,13 +3,14 @@
 #include "monodomain/monodomain_solver.h"
 #include "monodomain/ode_solver.h"
 #include "utils/logfile_utils.h"
+#include "string/sds.h"
+#include "monodomain/output_utils.h"
 
 #ifdef COMPILE_OPENGL
 #include "draw/draw.h"
 #endif
 
-int main (int argc, char **argv) 
-{
+int main (int argc, char **argv) {
 
     struct user_options *options;
     options = new_user_options ();
@@ -53,49 +54,54 @@ int main (int argc, char **argv)
     configure_monodomain_solver_from_options (monodomain_solver, options);
     configure_grid_from_options (the_grid, options);
 
-#ifndef COMPILE_CUDA
+    #ifndef COMPILE_CUDA
     if (ode_solver->gpu) 
     {
         print_to_stdout_and_file ("Cuda runtime not found in this system. Fallbacking to CPU solver!!\n");
         ode_solver->gpu = false;
     }
-#endif
+    #endif
 
-#ifndef COMPILE_OPENGL
+    #ifndef COMPILE_OPENGL
     if (options->draw) 
     {
         print_to_stdout_and_file ("OpenGL not found. The output will not be draw!!\n");
         options->draw = false;
     }
-#endif
+    #endif
 
     int np = monodomain_solver->num_threads;
 
     if (np == 0)
         np = 1;
 
-#if defined(_OPENMP)
+    #if defined(_OPENMP)
     omp_set_num_threads (np);
-#endif
+    #endif
 
     if (options->draw) 
     {
-#ifdef COMPILE_OPENGL
+        #ifdef COMPILE_OPENGL
 
         omp_set_nested (true);
 
-#pragma omp parallel sections num_threads(2)
+        // Uma thread fica por conta de desenhar o OpenGL 
+        // e a outra resolve a equacao do monodominio
+        #pragma omp parallel sections num_threads(2)
         {
-#pragma omp section
+            #pragma omp section
             {
                 grid_to_draw = NULL;
                 init_opengl (argc, argv);
             }
 
-#pragma omp section
-            { solve_monodomain (monodomain_solver, ode_solver, the_grid, options); }
+            #pragma omp section
+            {
+                solve_monodomain (monodomain_solver, ode_solver, the_grid, options); 
+            }
         }
-#endif
+
+        #endif
     } 
     else 
     {

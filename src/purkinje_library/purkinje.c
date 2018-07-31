@@ -31,7 +31,7 @@ SET_SPATIAL_PURKINJE (initialize_purkinje_with_custom_mesh)
 
     // TO DO: Populate the 'grid_cell' linked-list with the nodes from the graph
     //        Some parameters from the 'cell_node' structure will not be used
-
+    initialize_and_construct_grid_purkinje(the_grid);
 
     free (network_file);
 

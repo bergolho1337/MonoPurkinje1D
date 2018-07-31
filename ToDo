@@ -19,6 +19,9 @@ Berg:
 		- Read the solution files outputting the value of the nodes  
 		- Use the ideas from ConvertVTK project of Sachetto to help ...
 
+- extras
+	- Ask Sachetto for the "big_scar", "small_scar" and "human" meshes files.
+
 ========================================================================================================================================
 Sachetto:
 

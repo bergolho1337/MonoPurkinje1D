@@ -17,13 +17,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include <math.h>
 #include "../../alg/grid/grid.h"
-#include "../output_utils.h"
-#include "stim_config_hash.h"
-#include "domain_config.h"
-#include "purkinje_config.h"
-#include "extra_data_config.h"
 
 
 #define SIGMA_X 1400
@@ -33,6 +29,8 @@
 #define DOMAIN_OPT 1800
 #define EXTRA_DATA_OPT 1900
 #define STIM_OPT 2000
+#define ASSEMBLY_MATRIX_OPT 2100            // Dummy value
+#define LINEAR_SYSTEM_SOLVER_OPT 2200       // Dummy value
 #define DRAW_OPT 3000
 #define BETA 4000
 #define CM 5000
@@ -98,6 +96,8 @@ struct user_options {
     struct stim_config_hash *stim_configs;
     struct domain_config *domain_config;
     struct purkinje_config *purkinje_config;
+    struct assembly_matrix_config *assembly_matrix_config;
+    struct linear_system_solver_config *linear_system_solver_config;
     struct extra_data_config *extra_data_config;
 
 };

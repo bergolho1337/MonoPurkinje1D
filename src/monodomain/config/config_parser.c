@@ -1,9 +1,16 @@
+#include <string.h>
+#include <assert.h>
+
 #include "config_parser.h"
 #include "../../ini_parser/ini_file_sections.h"
 #include "../../utils/logfile_utils.h"
-
-#include <string.h>
-#include <assert.h>
+#include "../../string/sds.h"
+#include "stim_config_hash.h"
+#include "domain_config.h"
+#include "purkinje_config.h"
+#include "assembly_matrix_config.h"
+#include "linear_system_solver_config.h"
+#include "extra_data_config.h"
 
 static const struct option long_options[] = {
         { "config_file", required_argument, NULL, 'c' },
@@ -33,6 +40,7 @@ static const struct option long_options[] = {
         { "cm", required_argument, NULL, CM},
         { "start_adapting_at", required_argument, NULL, START_REFINING},
         { "domain", required_argument, NULL, DOMAIN_OPT},
+        { "assembly_matrix", required_argument, NULL, ASSEMBLY_MATRIX_OPT},
         { "extra_data", required_argument, NULL, EXTRA_DATA_OPT},
         { "stimulus", required_argument, NULL, STIM_OPT},
         { "draw_gl_output", no_argument, NULL, DRAW_OPT},
@@ -175,6 +183,8 @@ struct user_options *new_user_options () {
     user_args->stim_configs = NULL;
     user_args->domain_config = NULL;
     user_args->purkinje_config = NULL;
+    user_args->assembly_matrix_config = NULL;
+    user_args->linear_system_solver_config = NULL;
     user_args->extra_data_config = NULL;
 
     user_args->draw = false;
@@ -387,6 +397,150 @@ void set_domain_config(const char *args, struct domain_config *dc, const char *c
 
     sdsfreesplitres(extra_config_tokens, tokens_count);
 
+}
+
+void set_linear_system_solver_config(const char *args, struct linear_system_solver_config *config, const char *config_file) 
+{
+
+    sds extra_config;
+    sds *extra_config_tokens;
+    int tokens_count;
+    extra_config = sdsnew(args);
+    extra_config_tokens = sdssplit(extra_config, ",", &tokens_count);
+    char *opt_value;
+    char *key, *value;
+
+    assert(config);
+
+    struct string_hash *sh = config->config_data.config;
+
+    for (int i = 0; i < tokens_count; i++) 
+    {
+        extra_config_tokens[i] = sdstrim(extra_config_tokens[i], " ");
+
+        int values_count;
+        sds *key_value = sdssplit(extra_config_tokens[i], "=", &values_count);
+
+        if (values_count != 2) 
+        {
+            fprintf(stderr, "Invalid format for options %s. Exiting!\n", args);
+            exit(EXIT_FAILURE);
+        }
+
+        key_value[0] = sdstrim(key_value[0], " ");
+        key_value[1] = sdstrim(key_value[1], " ");
+
+        key = key_value[0];
+        value = key_value[1];
+
+        if (strcmp(key, "name") == 0) 
+        {
+            if (strcmp(key, "function") == 0) 
+            {
+                if (config->config_data.function_name_was_set) 
+                {
+                    print_to_stdout_and_file("WARNING: For linear_system configuration: \n");
+                    issue_overwrite_warning("function", config->config_data.function_name, value, config_file);
+                }
+                free(config->config_data.function_name);
+                config->config_data.function_name = strdup(value);
+            } 
+            else if (strcmp(key, "library_file") == 0) 
+            {
+                if (config->config_data.library_file_path_was_set) 
+                {
+                    print_to_stdout_and_file("WARNING: For linear_system configuration: \n");
+                    issue_overwrite_warning("library_file", config->config_data.library_file_path, value, config_file);
+                }
+                free(config->config_data.library_file_path);
+                config->config_data.library_file_path = strdup(value);
+            } 
+            else 
+            {
+                opt_value = string_hash_search(sh, key);
+                if (opt_value) 
+                {
+                    issue_overwrite_warning(key, opt_value, value, config_file);
+                }
+
+                string_hash_insert_or_overwrite(sh, key, value);
+            }
+            sdsfreesplitres(key_value, values_count);
+        }
+        sdsfreesplitres(extra_config_tokens, tokens_count);
+    }
+}
+
+void set_assembly_matrix_config(const char *args, struct assembly_matrix_config *mc, const char *config_file) 
+{
+
+    sds extra_config;
+    sds *extra_config_tokens;
+    int tokens_count;
+    extra_config = sdsnew(args);
+    extra_config_tokens = sdssplit(extra_config, ",", &tokens_count);
+    char *opt_value;
+    char *key, *value;
+
+    assert(mc);
+
+    struct string_hash *sh = mc->config_data.config;
+
+    for (int i = 0; i < tokens_count; i++) 
+    {
+        extra_config_tokens[i] = sdstrim(extra_config_tokens[i], " ");
+
+        int values_count;
+        sds *key_value = sdssplit(extra_config_tokens[i], "=", &values_count);
+
+        if (values_count != 2) 
+        {
+            fprintf(stderr, "Invalid format for options %s. Exiting!\n", args);
+            exit(EXIT_FAILURE);
+        }
+
+        key_value[0] = sdstrim(key_value[0], " ");
+        key_value[1] = sdstrim(key_value[1], " ");
+
+        key = key_value[0];
+        value = key_value[1];
+
+        if (strcmp(key, "name") == 0) 
+        {
+            if (strcmp(key, "function") == 0) 
+            {
+                if (mc->config_data.function_name_was_set) 
+                {
+                    print_to_stdout_and_file("WARNING: For assembly_matrix configuration: \n");
+                    issue_overwrite_warning("function", mc->config_data.function_name, value, config_file);
+                }
+                free(mc->config_data.function_name);
+                mc->config_data.function_name = strdup(value);
+            } 
+            else if (strcmp(key, "library_file") == 0) 
+            {
+                if (mc->config_data.library_file_path_was_set) 
+                {
+                    print_to_stdout_and_file("WARNING: For assembly_matrix configuration: \n");
+                    issue_overwrite_warning("library_file", mc->config_data.library_file_path, value, config_file);
+                }
+                free(mc->config_data.library_file_path);
+                mc->config_data.library_file_path = strdup(value);
+            } 
+            else 
+            {
+                opt_value = string_hash_search(sh, key);
+                if (opt_value) 
+                {
+                    issue_overwrite_warning(key, opt_value, value, config_file);
+                }
+                string_hash_insert_or_overwrite(sh, key, value);
+
+            }
+            sdsfreesplitres(key_value, values_count);
+        }
+        sdsfreesplitres(extra_config_tokens, tokens_count);
+    }
 }
 
 void set_extra_data_config(const char *args, struct extra_data_config *dc, const char *config_file) {
@@ -702,6 +856,22 @@ void parse_options (int argc, char **argv, struct user_options *user_args) {
                 }
                 set_domain_config(optarg, user_args->domain_config, user_args->config_file );
                 break;
+            case ASSEMBLY_MATRIX_OPT:
+                if(user_args->assembly_matrix_config == NULL) 
+                {
+                    print_to_stdout_and_file("Creating new assembly_matrix config from command line!\n");
+                    user_args->assembly_matrix_config = new_assembly_matrix_config();
+                }
+                set_assembly_matrix_config(optarg, user_args->assembly_matrix_config, user_args->config_file );
+                break;
+            case LINEAR_SYSTEM_SOLVER_OPT:
+                if(user_args->linear_system_solver_config == NULL) 
+                {
+                    print_to_stdout_and_file("Creating new linear_system_solver config from command line!\n");
+                    user_args->linear_system_solver_config = new_linear_system_solver_config();
+                }
+                set_linear_system_solver_config(optarg, user_args->linear_system_solver_config, user_args->config_file);
+                break;
             case EXTRA_DATA_OPT:
                 if(user_args->extra_data_config == NULL) {
                     print_to_stdout_and_file("Creating new extra data config from command line!\n");
@@ -932,6 +1102,50 @@ int parse_config_file (void *user, const char *section, const char *name, const 
         }
         else {
             string_hash_insert(pconfig->purkinje_config->config_data.config, name, value);
+        }
+    }
+    else if(MATCH_SECTION(MATRIX_ASSEMBLY_SECTION)) 
+    {
+        if(pconfig->assembly_matrix_config == NULL) 
+        {
+            pconfig->assembly_matrix_config = new_assembly_matrix_config();
+        }
+
+        if(MATCH_NAME("function")) 
+        {
+            pconfig->assembly_matrix_config->config_data.function_name = strdup(value);
+            pconfig->assembly_matrix_config->config_data.function_name_was_set = true;
+        }
+        else if(MATCH_NAME("library_file")) 
+        {
+            pconfig->assembly_matrix_config->config_data.library_file_path = strdup(value);
+            pconfig->assembly_matrix_config->config_data.library_file_path_was_set = true;
+        }
+        else 
+        {
+            string_hash_insert(pconfig->assembly_matrix_config->config_data.config, name, value);
+        }
+    }
+    else if(MATCH_SECTION(LINEAR_SYSTEM_SOLVER_SECTION)) 
+    {
+        if(pconfig->linear_system_solver_config == NULL) 
+        {
+            pconfig->linear_system_solver_config = new_linear_system_solver_config();
+        }
+
+        if(MATCH_NAME("function")) 
+        {
+            pconfig->linear_system_solver_config->config_data.function_name = strdup(value);
+            pconfig->linear_system_solver_config->config_data.function_name_was_set = true;
+        }
+        else if(MATCH_NAME("library_file")) 
+        {
+            pconfig->linear_system_solver_config->config_data.library_file_path = strdup(value);
+            pconfig->linear_system_solver_config->config_data.library_file_path_was_set = true;
+        }
+        else 
+        {
+            string_hash_insert(pconfig->linear_system_solver_config->config_data.config, name, value);
         }
     }
     else if(MATCH_SECTION(EXTRA_DATA_SECTION)) {

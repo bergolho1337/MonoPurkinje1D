@@ -447,3 +447,26 @@ void save_grid_domain (struct grid * the_grid, const char *file_name) {
     }
     fclose (f);
 }
+
+void initialize_grid_purkinje (struct grid *the_grid)
+{
+    assert(the_grid);
+
+    the_grid->number_of_cells = 0;
+}
+
+void construct_grid_purkinje (struct grid *the_grid)
+{
+    assert(the_grid);
+
+    // TO DO: Create cell nodes by using the Purkinje graph
+    
+}
+
+void initialize_and_construct_grid_purkinje (struct grid *the_grid)
+{
+    assert(the_grid);
+
+    initialize_grid_purkinje(the_grid);
+    construct_grid_purkinje(the_grid);
+}

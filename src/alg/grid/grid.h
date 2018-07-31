@@ -70,4 +70,8 @@ void lock_grid(struct grid *the_grid);
 void unlock_grid(struct grid *the_grid);
 
 
+void initialize_and_construct_grid_purkinje (struct grid *the_grid);
+void initialize_grid_purkinje (struct grid *the_grid);
+void construct_grid_purkinje (struct grid *the_grid);
+
 #endif //MONOALG3D_GRID_H

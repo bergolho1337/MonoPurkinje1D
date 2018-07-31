@@ -84,6 +84,12 @@ struct cell_node {
     double p1; /* p's upgrade in the conjugate gradient algorithm. */
     double z;  // Jacobi preconditioner
     double b;  /* In Ax = b, corresponds to the element in int_vector b associated to this cell. */
+    double x_aux; // Biconjugate variable
+    double r_aux; // Biconjugate variable
+    double z_aux; // Biconjugate variable
+    double p_aux; // Biconjugate variable
+    double p1_aux; // Biconjugate variable
+    double xA; // Biconjugate variable
 
 #if defined(_OPENMP)
     omp_lock_t updating;
