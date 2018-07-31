@@ -37,9 +37,6 @@ SET_SPATIAL_PURKINJE (initialize_purkinje_with_custom_mesh)
 
     free (network_file);
 
-    print_to_stdout_and_file("Leaving program ...\n");
-    exit(EXIT_FAILURE);
-
 }
 
 // TO DO: Build some benchmark Purkinje network for quick tests ...

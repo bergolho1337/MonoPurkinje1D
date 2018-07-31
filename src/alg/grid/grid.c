@@ -459,7 +459,48 @@ void construct_grid_purkinje (struct grid *the_grid)
 {
     assert(the_grid);
 
+    printf("On construct_grid_purkinje ...\n");
     // TO DO: Create cell nodes by using the Purkinje graph
+    double side_length = the_grid->the_purkinje_network->dx;
+    double half_side_length = side_length / 2.0f;
+    double quarter_side_length = side_length / 4.0f;
+
+    int total_nodes = the_grid->the_purkinje_network->total_nodes;
+    
+    // Create an array of cell nodes
+    struct cell_node **cells = (struct cell_node**)malloc(sizeof(struct cell_node*)*total_nodes);
+    for (int i = 0; i < total_nodes; i++)
+        cells[i] = new_cell_node();
+    
+    // Pass through the Purkinje graph and set the cell nodes.
+    struct node *n = the_grid->the_purkinje_network->list_nodes;
+    for (int i = 0; i < total_nodes; i++)
+    {
+        if (i == 0)
+            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+                        NULL,NULL,NULL,NULL,NULL,NULL,\
+                        NULL,cells[i+1],i,0,\
+                        n->x,n->y,n->z);
+        else if (i == total_nodes-1)
+            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+                        NULL,NULL,NULL,NULL,NULL,NULL,\
+                        cells[i-1],NULL,i,0,\
+                        n->x,n->y,n->z);
+        else
+            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+                        NULL,NULL,NULL,NULL,NULL,NULL,\
+                        cells[i-1],cells[i+1],i,0,\
+                        n->x,n->y,n->z);
+
+        // Do not refine the Purkinje cells 
+        cells[i]->can_change = false;
+
+        n = n->next;
+    }
+    
+    // Grid initialization
+    the_grid->first_cell = cells[0];
+    the_grid->number_of_cells = total_nodes;
     
 }
 

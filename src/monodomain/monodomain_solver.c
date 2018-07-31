@@ -122,8 +122,6 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
         exit (EXIT_FAILURE);
     }
 
-    // OK ATE AQUI
-
     if (assembly_matrix_config) 
     {
         init_assembly_matrix_functions (assembly_matrix_config);
@@ -144,8 +142,21 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
         exit (EXIT_FAILURE);
     }
 
-    //print_to_stdout_and_file("Leaving program ...\n");
-    //exit(EXIT_FAILURE);
+    // OK ATE AQUI
+    // DEBUG
+    /*
+    print_to_stdout_and_file("Testing cell_nodes\n");
+    struct cell_node *tmp = the_grid->first_cell;
+    while (tmp != NULL)
+    {
+        print_to_stdout_and_file("Node %d = (%.10lf,%.10lf,%.10lf) Refine = %d\n",tmp->grid_position,\
+                                tmp->center_x,tmp->center_y,tmp->center_z,tmp->can_change);
+        tmp = tmp->next;
+    }
+
+    print_to_stdout_and_file("Leaving program ...\n");
+    exit(EXIT_FAILURE);
+    */
 
     if (has_extra_data) 
     {
