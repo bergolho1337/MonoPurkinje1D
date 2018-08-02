@@ -119,6 +119,7 @@ void build_mesh_purkinje (struct graph *the_purkinje_network, struct graph *skel
 
     // TO DO: Maybe avoid this conversion by building a skeleton mesh directly in micrometers
     // The side_length of a Purkinje volume is given in micrometers, so we convert to centimeters
+    // um -> cm
     the_purkinje_network->dx = side_length*1.0e-04;
 
     uint32_t n = skeleton_network->total_nodes;
@@ -132,6 +133,8 @@ void build_mesh_purkinje (struct graph *the_purkinje_network, struct graph *skel
     
     // Make a Depth-First-Search to build the mesh of the Purkinje network
     depth_first_search(the_purkinje_network,tmp,0,map_skeleton_to_mesh);
+
+    the_purkinje_network->dx = side_length;
 
     free(map_skeleton_to_mesh);
 }

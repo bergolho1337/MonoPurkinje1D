@@ -268,13 +268,16 @@ void order_grid_cells (struct grid *the_grid) {
     grid_cell = the_grid->first_cell;
 
     //Here we allocate the maximum number of cells we will need for the whole simulation
-    if (the_grid->active_cells == NULL) {
+    if (the_grid->active_cells == NULL) 
+    {
         the_grid->active_cells = (struct cell_node **)malloc (sizeof (struct cell_node *) * the_grid->number_of_cells);
     }
 
     uint32_t counter = 0;
-    while (grid_cell != 0) {
-        if (grid_cell->active) {
+    while (grid_cell != 0) 
+    {
+        if (grid_cell->active) 
+        {
             grid_cell->grid_position = counter;
             the_grid->active_cells[counter] = grid_cell;
             counter++;
@@ -459,11 +462,12 @@ void construct_grid_purkinje (struct grid *the_grid)
 {
     assert(the_grid);
 
-    printf("On construct_grid_purkinje ...\n");
-    // TO DO: Create cell nodes by using the Purkinje graph
     double side_length = the_grid->the_purkinje_network->dx;
     double half_side_length = side_length / 2.0f;
     double quarter_side_length = side_length / 4.0f;
+    printf("Side length = %lf\n",side_length);
+    printf("Half_side length = %lf\n",half_side_length);
+    printf("Quarter_side length = %lf\n",quarter_side_length);
 
     int total_nodes = the_grid->the_purkinje_network->total_nodes;
     
@@ -477,22 +481,22 @@ void construct_grid_purkinje (struct grid *the_grid)
     for (int i = 0; i < total_nodes; i++)
     {
         if (i == 0)
-            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+            set_cell_node_data (cells[i],side_length,half_side_length,0,\
                         NULL,NULL,NULL,NULL,NULL,NULL,\
                         NULL,cells[i+1],i,0,\
                         n->x,n->y,n->z);
         else if (i == total_nodes-1)
-            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+            set_cell_node_data (cells[i],side_length,half_side_length,0,\
                         NULL,NULL,NULL,NULL,NULL,NULL,\
                         cells[i-1],NULL,i,0,\
                         n->x,n->y,n->z);
         else
-            set_cell_node_data (cells[i], half_side_length, quarter_side_length,0,\
+            set_cell_node_data (cells[i],side_length,half_side_length,0,\
                         NULL,NULL,NULL,NULL,NULL,NULL,\
                         cells[i-1],cells[i+1],i,0,\
                         n->x,n->y,n->z);
 
-        // Do not refine the Purkinje cells 
+        // Do not refine the Purkinje cells !
         cells[i]->can_change = false;
 
         n = n->next;

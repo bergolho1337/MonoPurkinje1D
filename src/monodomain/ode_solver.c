@@ -143,7 +143,8 @@ void init_ode_solver_with_cell_model(struct ode_solver* solver) {
 
 }
 
-void set_ode_initial_conditions_for_all_volumes(struct ode_solver *solver, uint32_t num_cells) {
+void set_ode_initial_conditions_for_all_volumes(struct ode_solver *solver, uint32_t num_cells) 
+{
 
     bool get_initial_v = !isfinite(solver->model_data.initial_v);
     bool get_neq = solver->model_data.number_of_ode_equations == -1;
@@ -151,36 +152,43 @@ void set_ode_initial_conditions_for_all_volumes(struct ode_solver *solver, uint3
     (*(solver->get_cell_model_data))(&(solver->model_data), get_initial_v, get_neq);
     int n_odes = solver->model_data.number_of_ode_equations;
 
-    if (solver->gpu) {
+    if (solver->gpu) 
+    {
 #ifdef COMPILE_CUDA
 
         set_ode_initial_conditions_gpu_fn *soicg_fn_pt = solver->set_ode_initial_conditions_gpu;
 
-        if(!soicg_fn_pt) {
+        if(!soicg_fn_pt) 
+        {
             fprintf(stderr, "The ode solver was set to use the GPU, \n "
                     "but no function called set_model_initial_conditions_gpu "
                     "was provided in the %s shared library file\n", solver->model_data.model_library_path);
             exit(11);
         }
 
-        if(solver->sv != NULL) {
+        if(solver->sv != NULL) 
+        {
             check_cuda_errors(cudaFree(solver->sv));
         }
 
         solver->pitch = soicg_fn_pt(&(solver->sv), num_cells);
 #endif
-    } else {
+    } 
+    else 
+    {
 
         set_ode_initial_conditions_cpu_fn *soicc_fn_pt = solver->set_ode_initial_conditions_cpu;
 
-        if(!soicc_fn_pt) {
+        if(!soicc_fn_pt) 
+        {
             fprintf(stderr, "The ode solver was set to use the CPU, \n "
                     "but no function called set_model_initial_conditions_cpu "
                     "was provided in the %s shared library file\n", solver->model_data.model_library_path);
             exit(11);
         }
 
-        if(solver->sv != NULL) {
+        if(solver->sv != NULL) 
+        {
             free(solver->sv);
         }
 
@@ -189,7 +197,8 @@ void set_ode_initial_conditions_for_all_volumes(struct ode_solver *solver, uint3
 		int i;
 
         #pragma omp parallel for
-        for(i = 0; i < num_cells; i++) {
+        for(i = 0; i < num_cells; i++) 
+        {
             soicc_fn_pt(solver->sv + (i*n_odes));
         }
     }

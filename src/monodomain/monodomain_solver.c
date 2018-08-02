@@ -142,22 +142,6 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
         exit (EXIT_FAILURE);
     }
 
-    // OK ATE AQUI
-    // DEBUG
-    /*
-    print_to_stdout_and_file("Testing cell_nodes\n");
-    struct cell_node *tmp = the_grid->first_cell;
-    while (tmp != NULL)
-    {
-        print_to_stdout_and_file("Node %d = (%.10lf,%.10lf,%.10lf) Refine = %d\n",tmp->grid_position,\
-                                tmp->center_x,tmp->center_y,tmp->center_z,tmp->can_change);
-        tmp = tmp->next;
-    }
-
-    print_to_stdout_and_file("Leaving program ...\n");
-    exit(EXIT_FAILURE);
-    */
-
     if (has_extra_data) 
     {
         init_extra_data_functions (extra_data_config);
@@ -178,8 +162,11 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     double refinement_bound = the_monodomain_solver->refinement_bound;
     double derefinement_bound = the_monodomain_solver->derefinement_bound;
 
-    double start_h = domain_config->start_h;
-    double max_h = domain_config->max_h;
+    //double start_h = domain_config->start_h;
+    //double max_h = domain_config->max_h;
+
+    double start_h = purkinje_config->start_h;
+    double max_h = purkinje_config->start_h;
 
     bool adaptive = the_grid->adaptive;
     double start_adpt_at = the_monodomain_solver->start_adapting_at;
@@ -193,6 +180,7 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
     double dt_edo = the_ode_solver->min_dt;
 
+    
 #ifdef COMPILE_CUDA
     if (gpu) {
         int device_count;
@@ -208,9 +196,20 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     order_grid_cells (the_grid);
     uint32_t original_num_cells = the_grid->num_active_cells;
 
+/*
+    struct cell_node **tmp = the_grid->active_cells;
+    for (int i = 0; i < the_grid->num_active_cells; i++)
+        print_to_stdout_and_file("Node %d = (%.10lf,%.10lf,%.10lf) Refine = %d\n",i,\
+                                tmp[i]->center_x,tmp[i]->center_y,tmp[i]->center_z,tmp[i]->can_change);
+
+    print_to_stdout_and_file("Leaving program ...\n");
+    exit(EXIT_FAILURE);
+*/
+
     save_old_cell_positions (the_grid);
 
-    if (adaptive) {
+    if (adaptive) 
+    {
         update_cells_to_solve (the_grid, the_ode_solver);
     }
 
@@ -225,10 +224,13 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
     int ode_step = 1;
 
-    if (dt_edp >= dt_edo) {
+    if (dt_edp >= dt_edo) 
+    {
         ode_step = (int)(dt_edp / dt_edo);
         print_to_stdout_and_file ("Solving EDO %d times before solving PDE\n", ode_step);
-    } else {
+    } 
+    else 
+    {
         print_to_stdout_and_file ("WARNING: EDO time step is greater than PDE time step. Adjusting to EDO time "
                                   "step: %lf\n",
                                   dt_edo);
@@ -248,9 +250,10 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
     print_to_stdout_and_file ("Assembling Monodomain Matrix Begin\n");
     start_stop_watch (&part_mat);
-    
-    // NEW !!
+
     set_initial_conditions_all_volumes (the_monodomain_solver, the_grid, initial_v);
+    
+    // TO DO: Investigate this function
     assembly_matrix_config->assembly_matrix(assembly_matrix_config, the_monodomain_solver, the_grid);
     //set_initial_conditions (the_monodomain_solver, the_grid, initial_v);
     //set_discretization_matrix (the_monodomain_solver, the_grid);
@@ -459,16 +462,17 @@ void update_ode_state_vector (struct ode_solver *the_ode_solver, struct grid *th
     }
 }
 
-void save_old_cell_positions (struct grid *the_grid) {
+void save_old_cell_positions (struct grid *the_grid) 
+{
 
     uint32_t n_active = the_grid->num_active_cells;
     struct cell_node **ac = the_grid->active_cells;
 
 	int i;
 
-
 	#pragma omp parallel for
-    for (i = 0; i < n_active; i++) {
+    for (i = 0; i < n_active; i++) 
+    {
         ac[i]->sv_position = ac[i]->grid_position;
     }
 }
@@ -492,7 +496,8 @@ void update_cells_to_solve (struct grid *the_grid, struct ode_solver *solver) {
     }
 }
 
-void set_initial_conditions_all_volumes (struct monodomain_solver *the_solver, struct grid *the_grid, double initial_v) {
+void set_initial_conditions_all_volumes (struct monodomain_solver *the_solver, struct grid *the_grid, double initial_v) 
+{
 
     double alpha, h;
     struct cell_node **ac = the_grid->active_cells;
@@ -504,7 +509,8 @@ void set_initial_conditions_all_volumes (struct monodomain_solver *the_solver, s
 
 
 	#pragma omp parallel for private(alpha, h)
-    for (i = 0; i < active_cells; i++) {
+    for (i = 0; i < active_cells; i++) 
+    {
         h = ac[i]->face_length;
         alpha = ALPHA (beta, cm, dt, h);
         ac[i]->v = initial_v;
@@ -595,7 +601,8 @@ void print_solver_info (struct monodomain_solver *the_monodomain_solver, struct 
         print_to_stdout_and_file ("The solution will not be saved\n");
     }
 
-    if (options->stim_configs) {
+    if (options->stim_configs) 
+    {
         print_to_stdout_and_file (LOG_LINE_SEPARATOR);
 
         if (options->stim_configs->size == 1)
@@ -628,24 +635,45 @@ void print_solver_info (struct monodomain_solver *the_monodomain_solver, struct 
         }
     }
 
-    print_to_stdout_and_file ("Domain configuration:\n");
-    print_to_stdout_and_file ("Domain name: %s\n", options->domain_config->domain_name);
-    print_to_stdout_and_file ("Domain initial Space Discretization: %lf um\n", options->domain_config->start_h);
+    if (options->domain_config)
+    {
+        print_to_stdout_and_file ("Domain configuration:\n");
+        print_to_stdout_and_file ("Domain name: %s\n", options->domain_config->domain_name);
+        print_to_stdout_and_file ("Domain initial Space Discretization: %lf um\n", options->domain_config->start_h);
 
-    if (the_grid->adaptive) {
-        print_to_stdout_and_file ("Domain maximum Space Discretization: %lf um\n", options->domain_config->max_h);
-        print_to_stdout_and_file ("The adaptivity will start in time: %lf ms\n",
-                                  the_monodomain_solver->start_adapting_at);
+        if (the_grid->adaptive) {
+            print_to_stdout_and_file ("Domain maximum Space Discretization: %lf um\n", options->domain_config->max_h);
+            print_to_stdout_and_file ("The adaptivity will start in time: %lf ms\n",
+                                    the_monodomain_solver->start_adapting_at);
+        }
+
+        if (options->domain_config->config_data.config->n == 1) {
+            print_to_stdout_and_file ("Domain extra parameter:\n");
+        } else if (options->domain_config->config_data.config->n > 1) {
+            print_to_stdout_and_file ("Domain extra parameters:\n");
+        }
+
+        STRING_HASH_PRINT_KEY_VALUE_LOG (options->domain_config->config_data.config);
+        print_to_stdout_and_file (LOG_LINE_SEPARATOR);
     }
+    
+    if (options->purkinje_config)
+    {
+        print_to_stdout_and_file ("Purkinje configuration:\n");
+        print_to_stdout_and_file ("Purkinje network name: %s\n", options->purkinje_config->domain_name);
+        print_to_stdout_and_file ("Purkinje network initial Space Discretization: %lf um\n", options->purkinje_config->start_h);
 
-    if (options->domain_config->config_data.config->n == 1) {
-        print_to_stdout_and_file ("Domain extra parameter:\n");
-    } else if (options->domain_config->config_data.config->n > 1) {
-        print_to_stdout_and_file ("Domain extra parameters:\n");
+        if (options->purkinje_config->config_data.config->n == 1) 
+        {
+            print_to_stdout_and_file ("Purkinje extra parameter:\n");
+        } 
+        else if (options->purkinje_config->config_data.config->n > 1) {
+            print_to_stdout_and_file ("Purkinje extra parameters:\n");
+        }
+
+        STRING_HASH_PRINT_KEY_VALUE_LOG (options->purkinje_config->config_data.config);
+        print_to_stdout_and_file (LOG_LINE_SEPARATOR);
     }
-
-    STRING_HASH_PRINT_KEY_VALUE_LOG (options->domain_config->config_data.config);
-    print_to_stdout_and_file (LOG_LINE_SEPARATOR);
 
     if (options->extra_data_config) {
         print_to_stdout_and_file ("Extra data ODE function configuration:\n");
