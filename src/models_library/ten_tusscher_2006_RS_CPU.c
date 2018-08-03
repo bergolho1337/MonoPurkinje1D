@@ -7,8 +7,6 @@ GET_CELL_MODEL_DATA(init_cell_model_data) {
 
     assert(cell_model);
 
-    print_to_stdout_and_file("Using ten Tusscher 2006 CPU model\n");
-
     if(get_initial_v)
         cell_model->initial_v = INITIAL_V;
     if(get_neq)

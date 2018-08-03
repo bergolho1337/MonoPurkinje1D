@@ -255,8 +255,8 @@ static void fill_discretization_matrix_elements_purkinje (double sigma_x, struct
                                                         struct node *pk_node) 
 {
 
-    uint32_t position;
-    bool has_found;
+    //uint32_t position;
+    //bool has_found;
     double h;
 
     double sigma_x1 = (2.0f * sigma_x * sigma_x) / (sigma_x + sigma_x);
@@ -336,9 +336,22 @@ ASSEMBLY_MATRIX(no_fibers_assembly_matrix)
             // Computes and designates the flux due to back cells.
             fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->back, 'b');
         }
+
+    /*
+    for (i = 0; i < num_active_cells; i++)
+    {
+        printf("\nCell %d -- Diagonal = %lf\n",i,ac[i]->elements[0].value);
+        int count = sb_count(ac[i]->elements);
+        printf("\tElements:\n");
+        for (int j = 1; j < count; j++)
+            printf("\t%d -- Column = %d -- Value = %lf\n",ac[i]->elements[j].column,ac[i]->elements[j].column,ac[i]->elements[j].value);
+    }
+
+    printf("Leaving program ...\n");
+    exit(EXIT_FAILURE);
+    */
 }
 
-// TO DO: Implement this function
 ASSEMBLY_MATRIX(purkinje_fibers_assembly_matrix) 
 {
 
@@ -348,59 +361,23 @@ ASSEMBLY_MATRIX(purkinje_fibers_assembly_matrix)
 
     initialize_diagonal_elements_purkinje(the_solver, the_grid);
 
-    int i;
-
     real sigma_x = 0.0;
     GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_x, config->config_data.config, "sigma_x");
 
     fill_discretization_matrix_elements_purkinje(sigma_x,ac,num_active_cells,pk_node);
 
-    for (i = 0; i < num_active_cells; i++)
+    /*
+    for (int i = 0; i < num_active_cells; i++)
     {
         printf("\nCell %d -- Diagonal = %lf\n",i,ac[i]->elements[0].value);
         int count = sb_count(ac[i]->elements);
         printf("\tElements:\n");
         for (int j = 1; j < count; j++)
-            printf("\t%d -- Column = %d\n",ac[i]->elements[j].column,ac[i]->elements[j].column);
+            printf("\t%d -- Column = %d -- Value = %lf\n",ac[i]->elements[j].column,ac[i]->elements[j].column,ac[i]->elements[j].value);
     }
 
     printf("Leaving program ...\n");
     exit(EXIT_FAILURE);
+    */
 
-    /*
-    int i;
-
-    real sigma_x = 0.0;
-    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_x, config->config_data.config, "sigma_x");
-
-    real sigma_y = 0.0;
-    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_y, config->config_data.config, "sigma_y");
-
-    real sigma_z = 0.0;
-    GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_z, config->config_data.config, "sigma_z");
-
-    #pragma omp parallel for
-        for (i = 0; i < num_active_cells; i++) 
-        {
-
-            // Computes and designates the flux due to south cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->south, 's');
-
-            // Computes and designates the flux due to north cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->north, 'n');
-
-            // Computes and designates the flux due to east cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->east, 'e');
-
-            // Computes and designates the flux due to west cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->west, 'w');
-
-            // Computes and designates the flux due to front cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->front, 'f');
-
-            // Computes and designates the flux due to back cells.
-            fill_discretization_matrix_elements (sigma_x, sigma_y, sigma_z, ac[i], ac[i]->back, 'b');
-        }
-
-    */    
 }

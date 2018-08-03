@@ -111,6 +111,7 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     }
     */
 
+    // Configure the functions and set the Purkinje mesh domain
     if (purkinje_config) 
     {
         init_purkinje_functions(purkinje_config);
@@ -196,16 +197,6 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     order_grid_cells (the_grid);
     uint32_t original_num_cells = the_grid->num_active_cells;
 
-/*
-    struct cell_node **tmp = the_grid->active_cells;
-    for (int i = 0; i < the_grid->num_active_cells; i++)
-        print_to_stdout_and_file("Node %d = (%.10lf,%.10lf,%.10lf) Refine = %d\n",i,\
-                                tmp[i]->center_x,tmp[i]->center_y,tmp[i]->center_z,tmp[i]->can_change);
-
-    print_to_stdout_and_file("Leaving program ...\n");
-    exit(EXIT_FAILURE);
-*/
-
     save_old_cell_positions (the_grid);
 
     if (adaptive) 
@@ -253,10 +244,7 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
     set_initial_conditions_all_volumes (the_monodomain_solver, the_grid, initial_v);
     
-    // TO DO: Investigate this function
     assembly_matrix_config->assembly_matrix(assembly_matrix_config, the_monodomain_solver, the_grid);
-    //set_initial_conditions (the_monodomain_solver, the_grid, initial_v);
-    //set_discretization_matrix (the_monodomain_solver, the_grid);
     
     total_mat_time = stop_stop_watch (&part_mat);
     print_to_stdout_and_file ("Assembling Monodomain Matrix End\n");
@@ -281,23 +269,30 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     double cur_time = 0.0;
 
     print_to_stdout_and_file ("Starting simulation\n");
-    while (cur_time <= finalT) {
+
+    while (cur_time <= finalT) 
+    {
 
 #ifdef COMPILE_OPENGL
         redraw  = count % print_rate == 0; //redraw grid
 #endif
 
-        if (save_to_file) {
+        if (save_to_file) 
+        {
 
-            if (count % print_rate == 0) {
+            if (count % print_rate == 0) 
+            {
                 start_stop_watch (&write_time);
 
                 activity = print_result(the_grid, configs, count, save_in_binary);
 
+
                 total_write_time += stop_stop_watch (&write_time);
 
-                if (abort_on_no_activity) {
-                    if (!activity) {
+                if (abort_on_no_activity) 
+                {
+                    if (!activity) 
+                    {
                         print_to_stdout_and_file ("No activity, aborting simulation\n");
                         break;
                     }
@@ -305,7 +300,11 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
             }
         }
 
-        if (cur_time > 0.0) {
+        printf("Leaving program\n");
+        exit(EXIT_FAILURE);
+
+        if (cur_time > 0.0) 
+        {
             update_ode_state_vector (the_ode_solver, the_grid, original_num_cells);
         }
 
