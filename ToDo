@@ -1,9 +1,10 @@
 Berg:
 
 - purkinje_library
-	- Implement the construct_grid_purkinje() function
-		- Populate the 'grid_cell' linked-list with the nodes from the mesh Purkinje graph
-	- Build the fill_discretization_matrix() for the Purkinje Network
+	- Test the construct_grid_purkinje() function
+		- Verify the solution over a benchmark Purkinje network
+		- Later, test with CCO network passed by Rafael ...
+	- Check the new fill_discretization_matrix() for the Purkinje Network
 
 - models_library
 	- Fix bug on the Li & Rudy 2011 Purkinje cell model
