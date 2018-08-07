@@ -12,13 +12,8 @@ Berg:
 	- Refactor the code of the 'mask_function' module
 	- Made more tests with the adaptive mesh when dealing with more than one celular model
 
-- vtk_output
-	- Write the solution of the Purkinje in files just like Sachetto
-	- Also just after building the Purkinje mesh write this to a VTK file
-	- Build a PurkinjeToVTK project that converts the solutions to a VTU format.
-		- Read the Purkinje mesh stored in VTK format
-		- Read the solution files outputting the value of the nodes  
-		- Use the ideas from ConvertVTK project of Sachetto to help ...
+- vtk_output  
+	- Test the PurkinjeToVTK program with other inputs ...
 
 - extras
 	- Ask Sachetto for the "big_scar", "small_scar" and "human" ALG meshes files.
