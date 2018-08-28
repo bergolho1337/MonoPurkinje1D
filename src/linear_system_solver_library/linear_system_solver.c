@@ -350,7 +350,7 @@ SOLVE_LINEAR_SYSTEM(biconjugate_gradient)
         else 
         {
             ac[i]->p = ac[i]->r;
-            ac[i]->p_aux = ac[i]->z_aux;
+            ac[i]->p_aux = ac[i]->r_aux;
         }
         rTr += ac[i]->r_aux * ac[i]->r;
     }
