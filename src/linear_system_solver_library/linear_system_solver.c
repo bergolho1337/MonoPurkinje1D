@@ -318,6 +318,8 @@ SOLVE_LINEAR_SYSTEM(biconjugate_gradient)
             element = cell_elements[el];
             uint32_t col = element.column;
             ac[i]->Ax += element.value * element.cell->v;
+
+            #pragma omp critical
             ac[col]->xA += element.value * ac[i]->x_aux;
         }
     }
@@ -382,6 +384,8 @@ SOLVE_LINEAR_SYSTEM(biconjugate_gradient)
                     element = cell_elements[el];
                     uint32_t col = element.column;
                     ac[i]->Ax += element.value * element.cell->p;
+                    
+                    #pragma omp critical
                     ac[col]->xA += element.value * ac[i]->p_aux;
                 }
 
