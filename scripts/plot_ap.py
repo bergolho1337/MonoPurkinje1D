@@ -13,7 +13,8 @@ def plot_ap (input_filename, output_filename):
     pyplot.plot(data,label="v",linewidth=2,color="black")
     pyplot.grid()
     pyplot.legend(loc=0,fontsize=15)
-    pyplot.savefig(output_filename)
+    pyplot.show()
+    #pyplot.savefig(output_filename)
     print("[+] Output file %s save with sucess !" % (output_filename))
 
 def main():

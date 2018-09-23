@@ -225,16 +225,25 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
 
 	int i;
 
-    if(stim_configs) {
-        for (int k = 0; k < stim_configs->size; k++) {
-            for (struct stim_config_elt *e = stim_configs->table[k % stim_configs->size]; e != 0; e = e->next) {
+
+    // TO DO: Insert the new Jhonny stimulus here ...
+    if(stim_configs) 
+    {
+        for (int k = 0; k < stim_configs->size; k++) 
+        {
+            for (struct stim_config_elt *e = stim_configs->table[k % stim_configs->size]; e != 0; e = e->next) 
+            {
                 tmp = e->value;
                 stim_start = tmp->stim_start;
                 stim_dur = tmp->stim_duration;
-                for (int j = 0; j < num_steps; ++j) {
-                    if ((time >= stim_start) && (time <= stim_start + stim_dur)) {
+                // Old Sachetto's stimulus protocol ...
+                for (int j = 0; j < num_steps; ++j) 
+                {
+                    if ((time >= stim_start) && (time <= stim_start + stim_dur)) 
+                    {
                         #pragma omp parallel for
-                        for (i = 0; i < n_active; i++) {
+                        for (i = 0; i < n_active; i++) 
+                        {
                             merged_stims[i] = tmp->spatial_stim_currents[i];
                         }
                     }
@@ -246,7 +255,8 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
     }
 
 
-    if(the_ode_solver->gpu) {
+    if(the_ode_solver->gpu) 
+    {
 #ifdef COMPILE_CUDA
         solve_model_ode_gpu_fn *solve_odes_pt = the_ode_solver->solve_model_ode_gpu;
         solve_odes_pt(dt, sv, merged_stims, the_ode_solver->cells_to_solve, n_active, num_steps, extra_data,
@@ -254,7 +264,8 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
 
 #endif
     }
-    else {
+    else 
+    {
         solve_model_ode_cpu_fn *solve_odes_pt = the_ode_solver->solve_model_ode_cpu;
         solve_odes_pt(dt, sv, merged_stims, the_ode_solver->cells_to_solve, n_active, num_steps, extra_data);
     }

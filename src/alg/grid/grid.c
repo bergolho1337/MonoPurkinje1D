@@ -289,33 +289,21 @@ void order_grid_cells (struct grid *the_grid) {
     the_grid->num_active_cells = counter;
 }
 
-void clean_grid (struct grid *the_grid) {
+void clean_grid (struct grid *the_grid) 
+{
 
     assert(the_grid);
     uint32_t number_of_cells = the_grid->number_of_cells;
 
-    // In order to release the memory allocated for the grid, the grid is
-    // derefined to level 1. Thus, the grid shape is known and each node can
-    // be easily reached.
-    while (number_of_cells > 8) {
-        derefine_all_grid (the_grid);
-        number_of_cells = the_grid->number_of_cells;
-    }
-
     struct cell_node *grid_cell = the_grid->first_cell;
 
-    if(grid_cell) {
-
-        // Deleting transition nodes.
-        free((struct transition_node *) (grid_cell->north));
-        free((struct transition_node *) (grid_cell->front));
-        free((struct transition_node *) (grid_cell->east));
-        free((struct transition_node *) (((struct cell_node *) (grid_cell->west))->west));
-        free((struct transition_node *) (((struct cell_node *) (grid_cell->south))->south));
-        free((struct transition_node *) (((struct cell_node *) (grid_cell->back))->back));
+    // We will only delete the cells nodes in Purkinje case
+    if(grid_cell) 
+    {
 
         // Deleting cells nodes.
-        while (grid_cell) {
+        while (grid_cell) 
+        {
 
             struct cell_node *next = grid_cell->next;
             free_cell_node(grid_cell);
@@ -324,15 +312,18 @@ void clean_grid (struct grid *the_grid) {
         }
     }
 
-    if (the_grid->the_purkinje_network) {
+    if (the_grid->the_purkinje_network) 
+    {
         free_graph(the_grid->the_purkinje_network);
     }
 
-    if (the_grid->refined_this_step) {
+    if (the_grid->refined_this_step) 
+    {
         sb_clear(the_grid->refined_this_step);
     }
 
-    if (the_grid->free_sv_positions) {
+    if (the_grid->free_sv_positions) 
+    {
         sb_clear(the_grid->free_sv_positions);
     }
 
@@ -480,6 +471,7 @@ void construct_grid_purkinje (struct grid *the_grid)
     struct node *n = the_grid->the_purkinje_network->list_nodes;
     for (int i = 0; i < total_nodes; i++)
     {
+        
         if (i == 0)
             set_cell_node_data (cells[i],side_length,half_side_length,0,\
                         NULL,NULL,NULL,NULL,NULL,NULL,\

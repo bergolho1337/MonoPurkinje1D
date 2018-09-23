@@ -65,3 +65,18 @@ else()
 endif(CUDA_FOUND)
 #########################################################
 
+############## FITZHUGH NAGUMO 1961 ##############################
+set(MODEL_FILE_CPU "fitzhugh_1961.c")
+set(MODEL_FILE_GPU "fitzhugh_1961.cu")
+set(COMMON_HEADERS model_common.h fitzhugh_1961.h)
+
+if(CUDA_FOUND)
+    CUDA_ADD_LIBRARY(fitzhugh_1961 ${LIB_TYPE} model_gpu_utils.h ${COMMON_HEADERS} ${MODEL_FILE_GPU} ${MODEL_FILE_CPU})
+	IF(MSVC)
+		set(CUDA_LIBRARIES PUBLIC ${CUDA_LIBRARIES})
+		TARGET_LINK_LIBRARIES(fitzhugh_1961 PUBLIC utils)
+	endif()
+else()
+    ADD_LIBRARY(fitzhugh_1961 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+endif(CUDA_FOUND)
+#########################################################

@@ -300,9 +300,6 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
             }
         }
 
-        printf("Leaving program\n");
-        exit(EXIT_FAILURE);
-
         if (cur_time > 0.0) 
         {
             update_ode_state_vector (the_ode_solver, the_grid, original_num_cells);
@@ -319,7 +316,6 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
         start_stop_watch (&cg_time);
 
-        //cg_iterations = conjugate_gradient (the_grid, max_its, cg_tol, jacobi, &cg_error);
         linear_system_solver_config->solve_linear_system(linear_system_solver_config, the_grid, &solver_iterations, &solver_error);
 
         cg_partial = stop_stop_watch (&cg_time);
@@ -328,55 +324,14 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
         total_cg_it += solver_iterations;
 
-        if (count % print_rate == 0) {
+        if (count % print_rate == 0) 
+        {
             print_to_stdout_and_file ("t = %lf, Iterations = "
                                       "%" PRIu32 ", Error Norm = %e, Number of Cells:"
                                       "%" PRIu32 ", Iterations time: %ld us\n",
                                       cur_time, solver_iterations, solver_error, the_grid->num_active_cells, cg_partial);
         }
 
-        if (adaptive) {
-
-            redo_matrix = false;
-            if (cur_time >= start_adpt_at) {
-                if (count % refine_each == 0) {
-                    start_stop_watch (&ref_time);
-                    redo_matrix = refine_grid_with_bound (the_grid, refinement_bound, start_h);
-                    total_ref_time += stop_stop_watch (&ref_time);
-                }
-
-                if (count % derefine_each == 0) {
-                    start_stop_watch (&deref_time);
-                    redo_matrix |= derefine_grid_with_bound (the_grid, derefinement_bound, max_h);
-                    total_deref_time += stop_stop_watch (&deref_time);
-                }
-            }
-            if (redo_matrix) {
-                order_grid_cells (the_grid);
-
-                if (stimuli_configs) {
-                    if(cur_time <= last_stimulus_time) {
-                        set_spatial_stim(stimuli_configs, the_grid);
-                    }
-                }
-                if (has_extra_data) {
-                    set_ode_extra_data(extra_data_config, the_grid, the_ode_solver);
-                }
-
-                update_cells_to_solve (the_grid, the_ode_solver);
-
-                if (sb_count (the_grid->refined_this_step) > 0) {
-                    update_state_vectors_after_refinement (the_ode_solver, the_grid->refined_this_step);
-                }
-
-                start_stop_watch (&part_mat);
-
-                //set_discretization_matrix (the_monodomain_solver, the_grid);
-                assembly_matrix_config->assembly_matrix(assembly_matrix_config, the_monodomain_solver, the_grid);
-
-                total_mat_time += stop_stop_watch (&part_mat);
-            }
-        }
         count++;
         cur_time += dt_edp;
 
@@ -518,7 +473,8 @@ void set_initial_conditions_all_volumes (struct monodomain_solver *the_solver, s
 }
 
 void update_monodomain (uint32_t initial_number_of_cells, uint32_t num_active_cells, struct cell_node **active_cells,
-                        double beta, double cm, double dt_edp, real *sv, int n_equations_cell_model, bool use_gpu) {
+                        double beta, double cm, double dt_edp, real *sv, int n_equations_cell_model, bool use_gpu) 
+{
 
     double h, alpha;
 
@@ -526,22 +482,27 @@ void update_monodomain (uint32_t initial_number_of_cells, uint32_t num_active_ce
     real *vms = NULL;
     size_t mem_size = initial_number_of_cells * sizeof (real);
 
-    if (use_gpu) {
+    if (use_gpu) 
+    {
         vms = (real *)malloc (mem_size);
         check_cuda_errors (cudaMemcpy (vms, sv, mem_size, cudaMemcpyDeviceToHost));
     }
 #endif
 	int i;
 	#pragma omp parallel for private(h, alpha)
-    for (i = 0; i < num_active_cells; i++) {
+    for (i = 0; i < num_active_cells; i++) 
+    {
         h = active_cells[i]->face_length;
         alpha = ALPHA (beta, cm, dt_edp, h);
 
-        if (use_gpu) {
-#ifdef COMPILE_CUDA
+        if (use_gpu) 
+        {
+        #ifdef COMPILE_CUDA
             active_cells[i]->b = vms[active_cells[i]->sv_position] * alpha;
-#endif
-        } else {
+        #endif
+        } 
+        else 
+        {
             active_cells[i]->b = sv[active_cells[i]->sv_position * n_equations_cell_model] * alpha;
         }
     }

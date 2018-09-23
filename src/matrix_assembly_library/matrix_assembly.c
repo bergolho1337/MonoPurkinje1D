@@ -274,6 +274,7 @@ static void fill_discretization_matrix_elements_purkinje (double sigma_x, struct
 
         e = pk_node->list_edges;
 
+        printf("\n");
         // Do the mapping of the edges from the graph to the sparse matrix data structure ...
         while (e != NULL)
         {
@@ -286,12 +287,12 @@ static void fill_discretization_matrix_elements_purkinje (double sigma_x, struct
 
             // Diagonal element ...
             cell_elements[0].value += (sigma_x1 * h);
+            printf("Node %d -- Diagonal = %lf\n",pk_node->id,cell_elements[0].value);
 
             sb_push(grid_cells[i]->elements,new_element);   
 
             e = e->next;         
         }
-
     }
 }
 
@@ -364,9 +365,9 @@ ASSEMBLY_MATRIX(purkinje_fibers_assembly_matrix)
     real sigma_x = 0.0;
     GET_PARAMETER_NUMERIC_VALUE_OR_REPORT_ERROR(real, sigma_x, config->config_data.config, "sigma_x");
 
+    // O BUG ESTA AQUI !!!!!
     fill_discretization_matrix_elements_purkinje(sigma_x,ac,num_active_cells,pk_node);
 
-    /*
     for (int i = 0; i < num_active_cells; i++)
     {
         printf("\nCell %d -- Diagonal = %lf\n",i,ac[i]->elements[0].value);
@@ -378,6 +379,5 @@ ASSEMBLY_MATRIX(purkinje_fibers_assembly_matrix)
 
     printf("Leaving program ...\n");
     exit(EXIT_FAILURE);
-    */
 
 }
