@@ -24,6 +24,15 @@ struct stim_config {
     bool stim_duration_was_set;
     real stim_current;
     bool stim_current_was_set;
+    // Variables related to Jhonny's stimulus protocol ...
+    int n_cycles;
+    bool n_cycles_was_set;
+    double start_period;
+    bool start_period_was_set;
+    double end_period;
+    bool end_period_was_set;
+    double period_step;
+    bool period_step_was_set;
 
     real *spatial_stim_currents;
     set_spatial_stim_fn *set_spatial_stim;

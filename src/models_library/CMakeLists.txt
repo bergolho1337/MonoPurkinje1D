@@ -80,3 +80,19 @@ else()
     ADD_LIBRARY(fitzhugh_1961 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 endif(CUDA_FOUND)
 #########################################################
+
+############## NOBLE 1962 ##############################
+set(MODEL_FILE_CPU "noble_1962.c")
+set(MODEL_FILE_GPU "noble_1962.cu")
+set(COMMON_HEADERS model_common.h noble_1962.h)
+
+if(CUDA_FOUND)
+    CUDA_ADD_LIBRARY(noble_1962 ${LIB_TYPE} model_gpu_utils.h ${COMMON_HEADERS} ${MODEL_FILE_GPU} ${MODEL_FILE_CPU})
+	IF(MSVC)
+		set(CUDA_LIBRARIES PUBLIC ${CUDA_LIBRARIES})
+		TARGET_LINK_LIBRARIES(noble_1962 PUBLIC utils)
+	endif()
+else()
+    ADD_LIBRARY(noble_1962 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+endif(CUDA_FOUND)
+#########################################################

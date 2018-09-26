@@ -71,7 +71,7 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     init_ode_solver_with_cell_model (the_ode_solver);
     struct stim_config_hash *stimuli_configs = configs->stim_configs;
     struct extra_data_config *extra_data_config = configs->extra_data_config;
-    struct domain_config *domain_config = configs->domain_config;
+    //struct domain_config *domain_config = configs->domain_config;
     struct purkinje_config *purkinje_config = configs->purkinje_config;
     struct assembly_matrix_config *assembly_matrix_config = configs->assembly_matrix_config;
     struct linear_system_solver_config *linear_system_solver_config = configs->linear_system_solver_config;
@@ -149,10 +149,10 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
     }
     ///////MAIN CONFIGURATION END//////////////////
 
-    int refine_each = the_monodomain_solver->refine_each;
-    int derefine_each = the_monodomain_solver->derefine_each; 
+    //int refine_each = the_monodomain_solver->refine_each;
+    //int derefine_each = the_monodomain_solver->derefine_each; 
 
-    bool redo_matrix;
+    //bool redo_matrix;
 
     bool activity;
 
@@ -160,17 +160,17 @@ void solve_monodomain (struct monodomain_solver *the_monodomain_solver, struct o
 
     int count = 0;
 
-    double refinement_bound = the_monodomain_solver->refinement_bound;
-    double derefinement_bound = the_monodomain_solver->derefinement_bound;
+    //double refinement_bound = the_monodomain_solver->refinement_bound;
+    //double derefinement_bound = the_monodomain_solver->derefinement_bound;
 
     //double start_h = domain_config->start_h;
     //double max_h = domain_config->max_h;
 
-    double start_h = purkinje_config->start_h;
-    double max_h = purkinje_config->start_h;
+    //double start_h = purkinje_config->start_h;
+    //double max_h = purkinje_config->start_h;
 
     bool adaptive = the_grid->adaptive;
-    double start_adpt_at = the_monodomain_solver->start_adapting_at;
+    //double start_adpt_at = the_monodomain_solver->start_adapting_at;
     bool save_to_file = (configs->out_dir_name != NULL);
 
     double dt_edp = the_monodomain_solver->dt;

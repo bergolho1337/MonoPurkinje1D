@@ -221,12 +221,15 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
     real *merged_stims = (real*)calloc(sizeof(real), n_active);
 
     struct stim_config *tmp = NULL;
-    real stim_start, stim_dur;
+    real stim_period;
+    real stim_start, stim_duration;
+    real start_period, end_period, period_step;
+    int n_cycles;
+
+    real new_time;
 
 	int i;
 
-
-    // TO DO: Insert the new Jhonny stimulus here ...
     if(stim_configs) 
     {
         for (int k = 0; k < stim_configs->size; k++) 
@@ -235,11 +238,28 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
             {
                 tmp = e->value;
                 stim_start = tmp->stim_start;
-                stim_dur = tmp->stim_duration;
-                // Old Sachetto's stimulus protocol ...
+                stim_duration = tmp->stim_duration;
+                start_period = tmp->start_period;
+                end_period = tmp->end_period;
+                period_step = tmp->period_step;
+                n_cycles = tmp->n_cycles;
+                
                 for (int j = 0; j < num_steps; ++j) 
                 {
-                    if ((time >= stim_start) && (time <= stim_start + stim_dur)) 
+                    new_time = 0.0f;
+                    // New Jhonny stimulus protocol for alternans simulations ...
+                    for (double new_period = start_period; new_period >= end_period; new_period -= period_step)
+                    {
+                        if ( time >= new_time && (time < new_time + n_cycles*new_period || new_period == end_period) )
+                        {
+                            stim_period = new_period;
+                            time -= new_time;
+                            break;
+                        }
+                        new_time += n_cycles*new_period;
+
+                    }
+                    if( (time-floor(time/stim_period)*stim_period>=stim_start) && ( time - floor(time/stim_period)*stim_period <= stim_start + stim_duration ) )
                     {
                         #pragma omp parallel for
                         for (i = 0; i < n_active; i++) 
@@ -247,6 +267,18 @@ void solve_all_volumes_odes(struct ode_solver *the_ode_solver, uint32_t n_active
                             merged_stims[i] = tmp->spatial_stim_currents[i];
                         }
                     }
+
+                    // Old Sachetto's stimulus protocol ...
+                    /*
+                    if ((time >= stim_start) && (time <= stim_start + stim_duration)) 
+                    {
+                        #pragma omp parallel for
+                        for (i = 0; i < n_active; i++) 
+                        {
+                            merged_stims[i] = tmp->spatial_stim_currents[i];
+                        }
+                    }
+                    */
                     time += dt;
                 }
                 time = cur_time;
