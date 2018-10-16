@@ -11,12 +11,13 @@ GET_CELL_MODEL_DATA(init_cell_model_data) {
 SET_ODE_INITIAL_CONDITIONS_CPU(set_model_initial_conditions_cpu) {
 
     // Original: -87,0.01,0.8,0.01
+    // Mestrado Lucas: -75.5344986658,0.0605467272,0.7259001355,0.4709239708
     // 500ms pacing steady state: -76.1302f, 0.0586201f, 0.741082f, 0.475923f 
     // 450ms pacing steady-state: -78.8607f, 0.050476f, 0.806294f, 0.518928f
-    sv[0] = -87.0f;    // V millivolt 
-    sv[1] = 0.01f;    // m dimensionless
-    sv[2] = 0.8f;    // h dimensionless
-    sv[3] = 0.01f;    // n dimensionless
+    sv[0] = -75.5344986658f;    // V millivolt 
+    sv[1] = 0.0605467272f;    // m dimensionless
+    sv[2] = 0.7259001355f;    // h dimensionless
+    sv[3] = 0.4709239708f;    // n dimensionless
 }
 
 SOLVE_MODEL_ODES_CPU(solve_model_odes_cpu) {
@@ -48,15 +49,14 @@ void solve_model_ode_cpu(real dt, real *sv, real stim_current)  {
     for(int i = 0; i < NEQ; i++)
         rY[i] = sv[i];
 
-    RHS_cpu(rY, rDY, stim_current);
+    RHS_cpu(dt, rY, rDY, stim_current);
 
-    // Solving model using Explicit Euler
-    // TO DO: Change to use Rush-Larsen ...
+    // Explicit Euler
     for(int i = 0; i < NEQ; i++)
         sv[i] = dt*rDY[i] + rY[i];
 }
 
-void RHS_cpu(const real *sv, real *rDY_, real stim_current) {
+void RHS_cpu(const real dt, const real *sv, real *rDY_, real stim_current) {
 
     //State variables
     const real V_old_ = sv[0];
@@ -93,6 +93,21 @@ void RHS_cpu(const real *sv, real *rDY_, real stim_current) {
     // Rates
     rDY_[0] = ( - (i_na + i_k + i_leak + calc_I_stim)) / Cm;
     //rDY_[0] = (- (i_na_no_oscilation + i_k + i_leak + calc_I_stim)/Cm) * 1.0E-03;
+    
+    // Rush-Larsen
+    //real m_inf = alpha_m / (alpha_m + beta_m);
+    //real tau_m = 1.0 / (alpha_m + beta_m);
+    //rDY_[1] = m_inf + ((m_old_ - m_inf)*exp(-dt/tau_m));
+
+    //real h_inf = alpha_h / (alpha_h + beta_h);
+    //real tau_h = 1.0 / (alpha_h + beta_h);
+    //rDY_[2] = h_inf + ((h_old_ - h_inf)*exp(-dt/tau_h));
+
+    //real n_inf = alpha_n / (alpha_n + beta_n);
+    //real tau_n = 1.0 / (alpha_n + beta_n);
+    //rDY_[3] = n_inf + ((n_old_ - n_inf)*exp(-dt/tau_n));
+
+    // Old Euler code ...
     rDY_[1] =  (alpha_m*(1.00000 - m_old_) -  (beta_m*m_old_) );
     rDY_[2] =  (alpha_h*(1.00000 - h_old_) -  (beta_h*h_old_) );
     rDY_[3] =  (alpha_n*(1.00000 - n_old_) -  (beta_n*n_old_) );

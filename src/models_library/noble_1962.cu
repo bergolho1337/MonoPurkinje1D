@@ -1,6 +1,7 @@
 #include "noble_1962.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "../monodomain/constants.h"
 #include "model_gpu_utils.h"
 
 extern "C" SET_ODE_INITIAL_CONDITIONS_GPU(set_model_initial_conditions_gpu) 
@@ -59,10 +60,10 @@ __global__ void kernel_set_model_inital_conditions(real *sv, int num_volumes) {
 
     if (threadID < num_volumes) {
 
-         *((real * )((char *) sv + pitch * 0) + threadID) = -87.0f;    //V millivolt 
-         *((real * )((char *) sv + pitch * 1) + threadID) = 0.01f;     //m dimensionless
-         *((real * )((char *) sv + pitch * 2) + threadID) = 0.8f;      //h millivolt 
-         *((real * )((char *) sv + pitch * 3) + threadID) = 0.01f;     //n dimensionless 
+         *((real * )((char *) sv + pitch * 0) + threadID) = -75.5344986658f;    //V millivolt 
+         *((real * )((char *) sv + pitch * 1) + threadID) = 0.0605467272f;     //m dimensionless
+         *((real * )((char *) sv + pitch * 2) + threadID) = 0.7259001355f;      //h millivolt 
+         *((real * )((char *) sv + pitch * 3) + threadID) = 0.4709239708f;     //n dimensionless 
     }
 }
 
@@ -83,10 +84,12 @@ __global__ void solve_gpu(real dt, real *sv, real* stim_currents,
 
         real rDY[NEQ];
 
-        for (int n = 0; n < num_steps; ++n) {
+        for (int n = 0; n < num_steps; ++n) 
+        {
 
-            RHS_gpu(sv, rDY, stim_currents[threadID], sv_id);
+            RHS_gpu(dt, sv, rDY, stim_currents[threadID], sv_id);
 
+            // Explicit Euler
             for(int i = 0; i < NEQ; i++) {
                 *((real *) ((char *) sv + pitch * i) + sv_id) = dt * rDY[i] + *((real *) ((char *) sv + pitch * i) + sv_id);
             }            
@@ -96,7 +99,7 @@ __global__ void solve_gpu(real dt, real *sv, real* stim_currents,
     }
 }
 
-inline __device__ void RHS_gpu(real *sv_, real *rDY_, real stim_current, int threadID_) {
+inline __device__ void RHS_gpu(real dt, real *sv_, real *rDY_, real stim_current, int threadID_) {
 
     //State variables
     const real V_old_ = *((real*)((char*)sv_ + pitch * 0) + threadID_);
@@ -115,7 +118,7 @@ inline __device__ void RHS_gpu(real *sv_, real *rDY_, real stim_current, int thr
     real calc_I_stim = stim_current;
 
     // Algebraics
-    real g_na = m_old_*m_old_*m_old_*h_old_*g_na_max;
+    real g_na = powf(m_old_,3.0000)*h_old_*g_na_max;
     real alpha_m = (((1.0e-01*((-V_old_)-4.8e+01))/(exp((((-V_old_)-4.8e+01)/1.5e+01))-1.0e+00)));
     real alpha_h =  ((1.7e-01*exp((((-V_old_)-9.0e+01)/2.0e+01))));
     real alpha_n = (((1.0e-04*((-V_old_)-5.0e+01))/(exp((((-V_old_)-5.0e+01)/1.0e+01))-1.0e+00)));
@@ -126,15 +129,13 @@ inline __device__ void RHS_gpu(real *sv_, real *rDY_, real stim_current, int thr
     real beta_n =  ((2.0e-03*exp((((-V_old_)-9.0e+01)/8.0e+01))));
     //real g_K1 =  1.3f*exp((- V_old_ - 90.0000)/50.0000)+ 0.015f*exp((V_old_+90.0000)/60.0000);
     real g_K1 = (((1.2*exp((((-V_old_)-9.0e+01)/5.0e+01)))+(1.5e-02*exp(((V_old_+9.0e+01)/6.0e+01)))));
-    real g_K2 =  1.2f*n_old_*n_old_*n_old_*n_old_;
+    real g_K2 =  1.2f*powf(n_old_,4.0000);
     real i_k =  (g_K1+g_K2)*(V_old_+100.000);
     real i_leak =  g_L*(V_old_ - E_L);
 
     // Rates
     rDY_[0] = ( - (i_na + i_k + i_leak + calc_I_stim)) / Cm;
-    //rDY_[0] = (- (i_na_no_oscilation + i_k + i_leak + calc_I_stim)/Cm) * 1.0E-03;
     rDY_[1] =  (alpha_m*(1.00000 - m_old_) -  (beta_m*m_old_) );
     rDY_[2] =  (alpha_h*(1.00000 - h_old_) -  (beta_h*h_old_) );
     rDY_[3] =  (alpha_n*(1.00000 - n_old_) -  (beta_n*n_old_) );
-
 }
