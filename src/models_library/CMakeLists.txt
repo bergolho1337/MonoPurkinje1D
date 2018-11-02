@@ -96,3 +96,19 @@ else()
     ADD_LIBRARY(noble_1962 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 endif(CUDA_FOUND)
 #########################################################
+
+############## BEELER REUTER 1977 ##############################
+set(MODEL_FILE_CPU "beeler_reuter_1977.c")
+set(MODEL_FILE_GPU "beeler_reuter_1977.cu")
+set(COMMON_HEADERS model_common.h beeler_reuter_1977.h)
+
+if(CUDA_FOUND)
+    CUDA_ADD_LIBRARY(beeler_reuter_1977 ${LIB_TYPE} model_gpu_utils.h ${COMMON_HEADERS} ${MODEL_FILE_GPU} ${MODEL_FILE_CPU})
+	IF(MSVC)
+		set(CUDA_LIBRARIES PUBLIC ${CUDA_LIBRARIES})
+		TARGET_LINK_LIBRARIES(beeler_reuter_1977 PUBLIC utils)
+	endif()
+else()
+    ADD_LIBRARY(beeler_reuter_1977 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+endif(CUDA_FOUND)
+#########################################################

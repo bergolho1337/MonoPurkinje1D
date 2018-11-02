@@ -1,0 +1,152 @@
+======================================================================
+Opening shared_libs/libnoble_1962.so as model lib
+Using the default library for stimuli functions for stim_s1
+Opening shared_libs/libdefault_purkinje.so as Purkinje lib
+Loading a custom Purkinje Network: Simple Purkinje
+Using the Purkinje library function: "initialize_purkinje_with_custom_mesh"
+Discretization for the Purkinje Network Mesh: 50.0000000000 um
+Node 0 will grow 1000 points
+[!] Purkinje mesh file will be saved in :> ./ConvertPurkinjeToVTK/purkinje_mesh.vtk
+Opening shared_libs/libdefault_matrix_assembly.so as matrix assembly lib
+Opening shared_libs/libdefault_linear_system_solver.so as linear system solver lib
+Setting ODE's initial conditions
+System parameters: 
+Using OpenMP with 4 threads
+Initial V: -75.534500
+Number of ODEs in cell model: 4
+Sigma X = 0.0013340000, Sigma Y = 0.0013340000, Sigma Z = 0.0013340000
+Beta = 0.1400000000, Cm = 1.0000000000
+Initial N. of Elements = 1001
+PDE time step = 0.020000
+ODE min time step = 0.020000
+Simulation Final Time = 3000.000000
+Maximum CG iterations = 200
+CG tolerance = 1.000000e-16
+Using Jacobi preconditioner
+Print Rate = 100
+Saving to plain text output in ./tmp_cable5cm_noble dir
+======================================================================
+Stimuli configuration:
+Stimulus name: stim_s1
+Stimulus start: 0.000000
+Stimulus duration: 2.000000
+Stimulus current: -1000.000000
+Stimulus library: ./shared_libs/libdefault_stimuli.so
+Stimulus function: stim_if_id_less_than
+Stimulus extra parameter:
+id_limit = 5.0
+======================================================================
+Purkinje configuration:
+Purkinje network name: Simple Purkinje
+Purkinje network initial Space Discretization: 50.000000 um
+Purkinje extra parameter:
+network_file = networks/cable_5cm.vtk
+======================================================================
+Solving EDO 1 times before solving PDE
+Assembling Monodomain Matrix Begin
+Assembling Monodomain Matrix End
+======================================================================
+Starting simulation
+t = 0.000000, Iterations = 44, Error Norm = 8.772221e-17, Number of Cells:1001, Iterations time: 1162 us
+t = 2.000000, Iterations = 44, Error Norm = 8.211795e-17, Number of Cells:1001, Iterations time: 568 us
+t = 4.000000, Iterations = 41, Error Norm = 5.824079e-17, Number of Cells:1001, Iterations time: 489 us
+t = 6.000000, Iterations = 42, Error Norm = 5.555215e-17, Number of Cells:1001, Iterations time: 627 us
+t = 8.000000, Iterations = 42, Error Norm = 6.267145e-17, Number of Cells:1001, Iterations time: 524 us
+t = 10.000000, Iterations = 42, Error Norm = 6.348104e-17, Number of Cells:1001, Iterations time: 547 us
+t = 12.000000, Iterations = 42, Error Norm = 6.134784e-17, Number of Cells:1001, Iterations time: 457 us
+t = 14.000000, Iterations = 42, Error Norm = 5.775591e-17, Number of Cells:1001, Iterations time: 474 us
+t = 16.000000, Iterations = 42, Error Norm = 5.329067e-17, Number of Cells:1001, Iterations time: 914 us
+t = 18.000000, Iterations = 41, Error Norm = 9.922875e-17, Number of Cells:1001, Iterations time: 460 us
+t = 20.000000, Iterations = 41, Error Norm = 8.854501e-17, Number of Cells:1001, Iterations time: 609 us
+t = 22.000000, Iterations = 41, Error Norm = 7.816461e-17, Number of Cells:1001, Iterations time: 657 us
+t = 24.000000, Iterations = 41, Error Norm = 6.865403e-17, Number of Cells:1001, Iterations time: 621 us
+t = 26.000000, Iterations = 41, Error Norm = 6.026403e-17, Number of Cells:1001, Iterations time: 622 us
+t = 28.000000, Iterations = 41, Error Norm = 5.318448e-17, Number of Cells:1001, Iterations time: 738 us
+t = 30.000000, Iterations = 40, Error Norm = 9.977117e-17, Number of Cells:1001, Iterations time: 452 us
+t = 32.000000, Iterations = 42, Error Norm = 7.585560e-17, Number of Cells:1001, Iterations time: 502 us
+t = 34.000000, Iterations = 30, Error Norm = 8.221524e-17, Number of Cells:1001, Iterations time: 332 us
+t = 36.000000, Iterations = 34, Error Norm = 7.021890e-17, Number of Cells:1001, Iterations time: 418 us
+t = 38.000000, Iterations = 35, Error Norm = 9.016601e-17, Number of Cells:1001, Iterations time: 477 us
+t = 40.000000, Iterations = 35, Error Norm = 9.134583e-17, Number of Cells:1001, Iterations time: 369 us
+t = 42.000000, Iterations = 35, Error Norm = 6.778390e-17, Number of Cells:1001, Iterations time: 384 us
+t = 44.000000, Iterations = 34, Error Norm = 9.182892e-17, Number of Cells:1001, Iterations time: 367 us
+t = 46.000000, Iterations = 34, Error Norm = 5.562990e-17, Number of Cells:1001, Iterations time: 374 us
+t = 48.000000, Iterations = 33, Error Norm = 6.458594e-17, Number of Cells:1001, Iterations time: 365 us
+t = 50.000000, Iterations = 32, Error Norm = 7.169346e-17, Number of Cells:1001, Iterations time: 371 us
+t = 52.000000, Iterations = 31, Error Norm = 7.833479e-17, Number of Cells:1001, Iterations time: 343 us
+t = 54.000000, Iterations = 30, Error Norm = 8.648176e-17, Number of Cells:1001, Iterations time: 332 us
+t = 56.000000, Iterations = 29, Error Norm = 9.859216e-17, Number of Cells:1001, Iterations time: 410 us
+t = 58.000000, Iterations = 29, Error Norm = 5.752761e-17, Number of Cells:1001, Iterations time: 435 us
+t = 60.000000, Iterations = 28, Error Norm = 7.366039e-17, Number of Cells:1001, Iterations time: 346 us
+t = 62.000000, Iterations = 28, Error Norm = 4.947052e-17, Number of Cells:1001, Iterations time: 351 us
+t = 64.000000, Iterations = 27, Error Norm = 7.396594e-17, Number of Cells:1001, Iterations time: 320 us
+t = 66.000000, Iterations = 27, Error Norm = 5.791265e-17, Number of Cells:1001, Iterations time: 293 us
+t = 68.000000, Iterations = 26, Error Norm = 9.937855e-17, Number of Cells:1001, Iterations time: 365 us
+t = 70.000000, Iterations = 26, Error Norm = 8.742087e-17, Number of Cells:1001, Iterations time: 331 us
+t = 72.000000, Iterations = 26, Error Norm = 7.999973e-17, Number of Cells:1001, Iterations time: 462 us
+t = 74.000000, Iterations = 26, Error Norm = 7.534893e-17, Number of Cells:1001, Iterations time: 301 us
+t = 76.000000, Iterations = 26, Error Norm = 7.238200e-17, Number of Cells:1001, Iterations time: 433 us
+t = 78.000000, Iterations = 26, Error Norm = 7.060378e-17, Number of Cells:1001, Iterations time: 296 us
+t = 80.000000, Iterations = 26, Error Norm = 6.963221e-17, Number of Cells:1001, Iterations time: 309 us
+t = 82.000000, Iterations = 26, Error Norm = 6.913728e-17, Number of Cells:1001, Iterations time: 316 us
+t = 84.000000, Iterations = 26, Error Norm = 6.899379e-17, Number of Cells:1001, Iterations time: 325 us
+t = 86.000000, Iterations = 26, Error Norm = 6.924969e-17, Number of Cells:1001, Iterations time: 313 us
+t = 88.000000, Iterations = 26, Error Norm = 6.960010e-17, Number of Cells:1001, Iterations time: 350 us
+t = 90.000000, Iterations = 26, Error Norm = 7.004394e-17, Number of Cells:1001, Iterations time: 307 us
+t = 92.000000, Iterations = 26, Error Norm = 7.064589e-17, Number of Cells:1001, Iterations time: 315 us
+t = 94.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 96.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 98.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 100.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 102.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 10 us
+t = 104.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 106.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 108.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 11 us
+t = 110.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 112.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 114.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 11 us
+t = 116.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 118.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 120.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 122.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 10 us
+t = 124.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 126.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 128.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 130.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 11 us
+t = 132.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 134.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 136.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 138.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 140.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 142.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 144.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 146.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 148.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 150.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 15 us
+t = 152.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 154.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 10 us
+t = 156.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 158.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 160.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 162.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 11 us
+t = 164.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 166.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 168.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 170.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 172.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 9 us
+t = 174.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 176.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 178.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 180.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 182.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 184.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 186.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 188.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 190.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 11 us
+t = 192.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 194.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 12 us
+t = 196.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 13 us
+t = 198.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 10 us
+t = 200.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 202.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time: 8 us
+t = 204.000000, Iterations = 1, Error Norm = nan, Number of Cells:1001, Iterations time
